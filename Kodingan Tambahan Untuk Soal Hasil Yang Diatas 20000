@@ -1,0 +1,59 @@
+public class Main {
+    public static void main(String[] args) {
+        String csvFile = "C:\\Users\\H P 240 G7\\Downloads\\cuboid.csv";
+        String csvSeparator = ",";
+
+        CSVReader.readCSV(csvFile, csvSeparator);
+    }
+}
+
+
+public class Cuboid {
+    public static double calculateSurfaceArea(double edgeA, double edgeB, double edgeC) {
+        double surfaceArea = 2 * ((edgeA * edgeB) + (edgeA * edgeC) + (edgeB * edgeC));
+        return surfaceArea;
+    }
+}
+
+
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+
+public class CSVReader {
+    public static void readCSV(String csvFile, String csvSeparator) {
+        String line = "";
+        boolean headerSkipped = false; // Menandakan apakah header sudah dilewati
+
+        try (BufferedReader br = new BufferedReader(new FileReader(csvFile))) {
+            while ((line = br.readLine()) != null) {
+                // Lewati baris header pertama
+                if (!headerSkipped) {
+                    headerSkipped = true;
+                    continue;
+                }
+
+                String[] data = line.split(csvSeparator);
+
+                // Memastikan data yang dibaca memiliki panjang yang sesuai
+                if (data.length == 3) {
+                    double edgeA = Double.parseDouble(data[0]);
+                    double edgeB = Double.parseDouble(data[1]);
+                    double edgeC = Double.parseDouble(data[2]);
+
+                    // Menghitung luas kuboid
+                    double surfaceArea = Cuboid.calculateSurfaceArea(edgeA, edgeB, edgeC);
+
+                    // Menampilkan hasil jika luas permukaan lebih dari 20000
+                    if (surfaceArea > 20000) {
+                        System.out.println("Luas kuboid dengan panjang " + edgeA + ", lebar " + edgeB + ", dan tinggi " + edgeC + " adalah: " + surfaceArea);
+                    }
+                } else {
+                    System.out.println("Data tidak lengkap untuk menghitung luas kuboid.");
+                }
+            }
+        } catch (IOException | NumberFormatException e) {
+            e.printStackTrace();
+        }
+    }
+}
